@@ -1,0 +1,313 @@
+openapi: 3.0.3
+info:
+  title: Event Seat Reservation Service
+  description: API documentation for the Event Seat Reservation Service
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Local server
+paths:
+  /events:
+    post:
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                totalSeats:
+                  type: integer
+              required:
+                - name
+                - totalSeats
+      responses:
+        "201":
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eventId:
+                    type: integer
+                  message:
+                    type: string
+        "400":
+          description: Bad request (event already exists)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /events/{eventId}/seats/available:
+    get:
+      summary: List available seats for an event
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of available seats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    seat_number:
+                      type: integer
+        "400":
+          description: Invalid Event ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /events/{eventId}/seats/{seatId}/hold:
+    post:
+      summary: Hold a seat
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: seatId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+              required:
+                - userId
+      responses:
+        "200":
+          description: Seat held successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  seatId:
+                    type: integer
+                  userId:
+                    type: string
+                  result:
+                    type: object
+        "400":
+          description: Bad request (seat not available or user reached max holds)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /events/{eventId}/seats/{seatId}/reserve:
+    post:
+      summary: Reserve a seat
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: seatId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+              required:
+                - userId
+      responses:
+        "200":
+          description: Seat reserved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  eventId:
+                    type: integer
+                  seatId:
+                    type: integer
+                  userId:
+                    type: string
+                  result:
+                    type: object
+        "400":
+          description: Bad request (no valid hold found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /events/{eventId}/seats/{seatId}/hold/refresh:
+    post:
+      summary: Refresh a hold on a seat
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: seatId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+              required:
+                - userId
+      responses:
+        "200":
+          description: Hold on seat refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  details:
+                    type: object
+        "400":
+          description: Bad request (no valid hold found)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        name:
+          type: string
+        totalSeats:
+          type: integer
+      required:
+        - name
+        - totalSeats
+    Seat:
+      type: object
+      properties:
+        id:
+          type: integer
+        seat_number:
+          type: integer
+    Hold:
+      type: object
+      properties:
+        eventId:
+          type: integer
+        seatId:
+          type: integer
+        userId:
+          type: string
+    Reserve:
+      type: object
+      properties:
+        eventId:
+          type: integer
+        seatId:
+          type: integer
+        userId:
+          type: string

@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "7c2e4320-2962-4191-bab0-07786e221633",
+		"name": "events",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "143417"
+	},
+	"item": [
+		{
+			"name": "create events",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sample Event1\",\n    \"totalSeats\": 10\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/events",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hold a seat",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"8d660641-b323-482a-971d-ade9cc4e90de\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/events/1/seats/1/hold",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"events",
+						"1",
+						"seats",
+						"1",
+						"hold"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "seats/available",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/events/1/seats/available",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"events",
+						"1",
+						"seats",
+						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/seats/reserve",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"8d660641-b323-482a-971d-ade9cc4e90de\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/events/1/seats/2/reserve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"events",
+						"1",
+						"seats",
+						"2",
+						"reserve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hold/refresh",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"8d660641-b323-482a-971d-ade9cc4e90de\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/events/1/seats/1/hold/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"events",
+						"1",
+						"seats",
+						"1",
+						"hold",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

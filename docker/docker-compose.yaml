@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7.0
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  postgis:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    user: "postgres"
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./secrets/POSTGRES_ENV
+    volumes:
+      - ./volumes/postgis:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+  app:
+    build:
+      context: ../event-seat-reservation-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - postgis
+    volumes:
+      - ../event-seat-reservation-service:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./secrets/EVENT-SEAT-RESERVATION-SERVICE_ENV
+      - ./secrets/POSTGRES_ENV
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgis:5432/${POSTGRES_DATABASE}
+    entrypoint: ["/bin/sh", "-c", "exec npm run dev"]
