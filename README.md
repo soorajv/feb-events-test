@@ -23,7 +23,7 @@ testing purposes.
 1. Clone the repository:
    ```bash
    git clone https://github.com/soorajv/feb-events-test
-   cd event-seat-reservation
+   cd feb-events-test
    ```
 ````
 
